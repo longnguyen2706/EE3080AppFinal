@@ -85,6 +85,8 @@
                     android:textSize="15dp"
                     android:textStyle="normal" />
 
+
+
                 <TextView
                     android:id="@+id/third_prediction"
                     android:layout_width="0sp"
@@ -93,7 +95,8 @@
                     android:layout_marginLeft="30sp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_gravity="center"
+                    android:layout_gravity="right"
+                    android:gravity="right"
                     android:paddingTop="10sp"
                     android:text="third prediction"
                     android:textColor="@android:color/holo_blue_dark"
@@ -121,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="30sp"
-
+                    android:gravity="right"
                     android:layout_marginRight="20sp"
                     android:layout_weight="1"
                     android:paddingTop="5sp"

@@ -280,8 +280,9 @@ public class Camera extends AppCompatActivity {
                 startActivity(intent);
                 //setResult(RESULT_OK,intent);
                 //finish();
+                }
 
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+             else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Toast.makeText(this, "Error cropping image", Toast.LENGTH_LONG).show();
             }

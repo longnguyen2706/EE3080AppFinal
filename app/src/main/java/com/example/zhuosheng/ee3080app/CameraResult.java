@@ -32,6 +32,7 @@ import com.rmtheis.yandtran.language.Language;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -114,6 +115,7 @@ public class CameraResult extends AppCompatActivity {
                 try {
                     photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                     takenImage.setImageBitmap(photo);
+
                 } catch (IOException e) {
                     Log.e("ImageBitmap", "Cannot save image as bitmap", e);
                 }
@@ -134,6 +136,14 @@ public class CameraResult extends AppCompatActivity {
                 };
                 Client myClient = new Client(postTaskListener, ip, 5000, photo, 5000);
                 myClient.execute();
+
+                TakenPicture obj = SaveImage.saveImageToExternalStorage(this.getApplicationContext(), photo);
+                obj.setMainName(main_prediction.getText().toString());
+                String[] suggestion = new String[]{"?","?","?","?"};
+                obj.setSuggestion(suggestion);
+                List<TakenPicture> history = MyPreferences.loadSharedPreferencesLogList(this.getApplicationContext());
+                history.add(obj);
+                MyPreferences.saveSharedPreferencesLogList(this.getApplicationContext(),history);
             }
 
             main_prediction.setOnClickListener(new View.OnClickListener() {
