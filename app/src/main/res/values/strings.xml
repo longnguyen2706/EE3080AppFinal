@@ -3,4 +3,27 @@
     <string name="btnTakePicture">Capture Image</string>
     <string name="btnUploadToServer">Upload to Server</string>
 
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Take a picture!</string>
+    <string name="slide_1_desc">Want to know which object is this? \n Let the app help you! Just take a picture!</string>
+
+    <string name="slide_2_title">Send it to our server!</string>
+    <string name="slide_2_desc">Simply press Send. The result will be returned in a blink of an eyes</string>
+
+    <string name="slide_3_title">Click to hear it!</string>
+    <string name="slide_3_desc">Choose among 3 different languages and click on the word to hear it!</string>
+
+    <string name="slide_4_title">Choose from gallery!</string>
+    <string name="slide_4_desc">Want to play with images in your gallery? \n Just choose one and upload it!</string>
+
+    <string name="slide_5_title">Browse history!</string>
+    <string name="slide_5_desc">Want to see all the image you have sent? \n Open the history!</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
+
 </resources>

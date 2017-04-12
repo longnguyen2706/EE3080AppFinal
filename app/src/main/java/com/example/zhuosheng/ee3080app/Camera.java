@@ -46,6 +46,8 @@ public class Camera extends AppCompatActivity {
     TextView PredictedText;
     FrameLayout Flashlay;
     int LIVE_MODE = 0, CAMERA_MODE = 0;
+    int CAMERA_RESULT_ACTIVITY = 10;
+    int TAKE_PHOTO_CODE = 1;
     String ip;
     Client myClient = null;
 
@@ -79,11 +81,11 @@ public class Camera extends AppCompatActivity {
         captureModeRadioGroup = (RadioGroup) findViewById(R.id.captureModeRadioGroup);
         flashModeRadioGroup = (RadioGroup) findViewById(R.id.flashModeRadioGroup);
         btnToggleCamera = (ImageButton) findViewById(R.id.toggleCamera);
-        btnLive =(ImageButton) findViewById(R.id.livemode);
+        btnLive = (ImageButton) findViewById(R.id.livemode);
         btnCapture = (ImageButton) findViewById(R.id.capturePhoto);
         PredictedText = (TextView) findViewById(R.id.PredictionText);
-        Bundle extras = getIntent().getExtras();
-        ip = extras.getString("IPAddress");
+        //Bundle extras = getIntent().getExtras();
+        ip = "192.168.1.1";//extras.getString("IPAddress");
         Flashlay = (FrameLayout) findViewById(R.id.Framelay);
 
         captureModeRadioGroup.setOnCheckedChangeListener(captureModeChangedListener);
@@ -93,15 +95,17 @@ public class Camera extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if(LIVE_MODE == 0){
+                if (LIVE_MODE == 0) {
                     Toast.makeText(Camera.this, "Processing Image, Please Wait...", Toast.LENGTH_SHORT).show();
                     btnCapture.setEnabled(false);
                     CAMERA_MODE = 1;
                     camera.captureImage();
-                }
-                else{
+
+                } else {
                     Toast.makeText(Camera.this, "Live Mode is still on!", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
 
@@ -110,7 +114,7 @@ public class Camera extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (CAMERA_MODE == 0) {
-                    switch(LIVE_MODE) {
+                    switch (LIVE_MODE) {
                         case 0:
                             LIVE_MODE = 1;
                             Toast.makeText(Camera.this, "Live Mode is initialised!", Toast.LENGTH_SHORT).show();
@@ -123,8 +127,7 @@ public class Camera extends AppCompatActivity {
                             btnLive.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                             break;
                     }
-                }
-                else{
+                } else {
                     Toast.makeText(Camera.this, "Camera mode is active!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -146,7 +149,7 @@ public class Camera extends AppCompatActivity {
             }
         });
 
-        final PostTaskListener <String> postTaskListener = new PostTaskListener<String>() {
+        final PostTaskListener<String> postTaskListener = new PostTaskListener<String>() {
             @Override
             public void onPostTask(String result) {
                 //Toast.makeText(Camera.this, result, Toast.LENGTH_SHORT).show();
@@ -162,17 +165,20 @@ public class Camera extends AppCompatActivity {
                 super.onPictureTaken(picture);
                 // Create a bitmap
                 Bitmap result = BitmapFactory.decodeByteArray(picture, 0, picture.length);
-                if(LIVE_MODE == 1 && CAMERA_MODE == 0){
+                if (LIVE_MODE == 1 && CAMERA_MODE == 0) {
                     myClient = new Client(postTaskListener, ip, 5000, result, 5000);
                     myClient.execute();
                 }
-                if(CAMERA_MODE == 1 && LIVE_MODE == 0){
+                if (CAMERA_MODE == 1 && LIVE_MODE == 0) {
                     String title = "tst";
 
                     File tempDir = Environment.getExternalStorageDirectory();
                     tempDir = new File(tempDir.getAbsolutePath() + "/.temp/");
                     tempDir.mkdir();
+                    //Intent cameraIntent = new Intent(Camera.this, CameraResult.class);
+                    //startActivityForResult(cameraIntent, CAMERA_RESULT_ACTIVITY);
                     try {
+
                         File tempFile = File.createTempFile(title, ".jpg", tempDir);
                         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                         result.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -183,6 +189,7 @@ public class Camera extends AppCompatActivity {
                         fos.write(bitmapData);
                         fos.flush();
                         fos.close();
+
                         CropImage.activity(Uri.fromFile(tempFile)).setGuidelines(CropImageView.Guidelines.ON).start(Camera.this);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -191,6 +198,7 @@ public class Camera extends AppCompatActivity {
             }
         });
     }
+
 
     @Override
     protected void onResume() {
@@ -258,19 +266,27 @@ public class Camera extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == TAKE_PHOTO_CODE){
+            Uri u = data.getData();
+            CropImage.activity(u).setGuidelines(CropImageView.Guidelines.ON).start(this);
+        }
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri imageUri = result.getUri();
-                Intent intent = new Intent(Camera.this, MainActivity.class);
-                intent.putExtra("imageUri", imageUri);
-                setResult(RESULT_OK,intent);
-                finish();
+                Intent intent = new Intent(Camera.this, CameraResult.class);
+                intent.putExtra("imageUri", imageUri.toString());
+                startActivity(intent);
+                //setResult(RESULT_OK,intent);
+                //finish();
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Toast.makeText(this, "Error cropping image", Toast.LENGTH_LONG).show();
             }
         }
-    }
 
-}
+
+        }
+    }

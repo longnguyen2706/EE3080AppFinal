@@ -72,15 +72,15 @@ public class Client extends AsyncTask<Void, Void, String> {
             }*/
 
         } catch (SocketTimeoutException e){
-            response = "TimeoutException:" + e.toString();
+            response = "Exception: Timeout";// + e.toString();
         } catch (UnknownHostException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            response = "UnknownHostException: " + e.toString();
+            response = "Exception: Unknown Host";// + e.toString();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            response = "IOException: " + e.toString();
+            response = "Exception: IO";// + e.toString();
         } finally {
             if (socket != null) {
                 try {
