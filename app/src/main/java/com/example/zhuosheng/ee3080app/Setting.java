@@ -36,7 +36,7 @@ public class Setting extends AppCompatActivity {
                                     int position, long id) {
                 switch (position) {
                     case 0:
-                        Intent newActivity0 = new Intent(Setting.this, feedback.class);
+                        Intent newActivity0 = new Intent(Setting.this, ip_add.class);
                         startActivity(newActivity0);
                         break;
                     case 1:Intent newActivity1 = new Intent(Setting.this, feedback.class);

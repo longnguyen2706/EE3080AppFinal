@@ -43,7 +43,6 @@
         <activity android:name=".about" />
         <activity android:name=".feedback" />
         <activity android:name=".ip_add" />
-        <activity android:name=".settings" />
     </application>
 
 </manifest>
