@@ -41,8 +41,8 @@
                 android:adjustViewBounds="true"
                 android:onClick="onImageGalleryClicked"
                 android:padding="0dp"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/gallerye" />
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/gallery" />
 
             <ImageButton
                 android:id="@+id/imgBtnHistory"
@@ -51,8 +51,8 @@
                 android:layout_weight="0.25"
                 android:adjustViewBounds="true"
                 android:padding="0dp"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/his" />
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/history" />
         </LinearLayout>
 
     </TableRow>

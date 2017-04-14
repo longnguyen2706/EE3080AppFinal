@@ -1,5 +1,7 @@
 package com.example.zhuosheng.ee3080app;
 
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
@@ -29,6 +31,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import com.rmtheis.yandtran.translate.Translate;
 import com.rmtheis.yandtran.language.Language;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,13 +116,16 @@ public class CameraResult extends AppCompatActivity {
         if (extras != null) {
             String imageUriString = extras.getString("imageUri");
             Uri imageUri = Uri.parse(imageUriString);
-            try {
-                photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                takenImage.setImageBitmap(photo);
-
-            } catch (IOException e) {
-                Log.e("ImageBitmap", "Cannot save image as bitmap", e);
-            }
+            photo = getResizedBitmap(imageUri,4096,4096);
+            takenImage.setImageBitmap(photo);
+//            try {
+//
+//                photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+//                takenImage.setImageBitmap(photo);
+//
+//            } catch (IOException e) {
+//                Log.e("ImageBitmap", "Cannot save image as bitmap", e);
+//            }
 
             String ip = IPAddress;
             PostTaskListener<String> postTaskListener = new PostTaskListener<String>() {
@@ -299,5 +305,36 @@ public class CameraResult extends AppCompatActivity {
         third_result_en = r3;
         fourth_result_en = r4;
         fifth_result_en = r5;
+    }
+
+//    public int[] getSizeImageFromUri(Uri uri) {
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inJustDecodeBounds = true;
+//        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
+//        int imageHeight = options.outHeight;
+//        int imageWidth = options.outWidth;
+//        int[] imageSize = {imageWidth, imageHeight};
+//        return imageSize;
+//    }
+    public Bitmap getResizedBitmap(Uri uri, int newWidth, int newHeight) {
+        Bitmap bm = BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath());
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        if (width<=4096 && height<=4096)
+            return bm;
+        else {
+            float scaleWidth = ((float) newWidth) / width;
+            float scaleHeight = ((float) newHeight) / height;
+            // CREATE A MATRIX FOR THE MANIPULATION
+            Matrix matrix = new Matrix();
+            // RESIZE THE BIT MAP
+            matrix.postScale(scaleWidth, scaleHeight);
+
+            // "RECREATE" THE NEW BITMAP
+            Bitmap resizedBitmap = Bitmap.createBitmap(
+                    bm, 0, 0, width, height, matrix, false);
+            bm.recycle();
+            return resizedBitmap;
+        }
     }
 }
