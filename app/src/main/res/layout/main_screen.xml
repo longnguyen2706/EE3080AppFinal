@@ -14,16 +14,18 @@
         <!--app:popupTheme="@style/AppTheme.PopupOverlay" />-->
     <ImageButton
         android:id="@+id/ImgBtnCam"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:adjustViewBounds="true"
-        android:padding="1dp"
-        android:scaleType="fitXY"
+        android:padding="0dp"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/caaaa" />
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:orientation="vertical">
 
         <LinearLayout
@@ -35,7 +37,7 @@
                 android:id="@+id/ImgBtnGallery"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.25"
                 android:adjustViewBounds="true"
                 android:onClick="onImageGalleryClicked"
                 android:padding="0dp"
@@ -46,9 +48,9 @@
                 android:id="@+id/imgBtnHistory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.25"
                 android:adjustViewBounds="true"
-                android:padding="1dp"
+                android:padding="0dp"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/his" />
         </LinearLayout>

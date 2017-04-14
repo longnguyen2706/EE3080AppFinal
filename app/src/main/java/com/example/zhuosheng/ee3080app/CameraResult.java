@@ -48,11 +48,12 @@ public class CameraResult extends AppCompatActivity {
     int CAMERA_ACTIVITY_CODE = 100;
     String IPAddress;
     TextToSpeech t1;
-    String TranslatedText = "";
+    String TranslatedText_r1, TranslatedText_r2, TranslatedText_r3, TranslatedText_r4, TranslatedText_r5;
     Language DestLanguage = Language.ENGLISH;
     Locale DestLocale = Locale.UK;
     String ChosenLanguage = "English";
-    String result_en;
+    String main_result_en, second_result_en, third_result_en, fourth_result_en, fifth_result_en;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -88,93 +89,166 @@ public class CameraResult extends AppCompatActivity {
             }
         }
 
-            main_prediction = (TextView) findViewById(R.id.main_prediction);
-            second_prediction = (TextView) findViewById(R.id.second_prediction);
-            third_prediction = (TextView) findViewById(R.id.third_prediction);
-            fourth_prediction = (TextView) findViewById(R.id.fourth_prediction);
-            fifth_prediction = (TextView) findViewById(R.id.fifth_prediction);
-            takenImage = (ImageView) findViewById(R.id.takenImage);
-            btnTranslate =(Button) findViewById(R.id.btnTranslate);
-            LangSpinner = (Spinner) findViewById(R.id.LangSpinner);
+        main_prediction = (TextView) findViewById(R.id.main_prediction);
+        second_prediction = (TextView) findViewById(R.id.second_prediction);
+        third_prediction = (TextView) findViewById(R.id.third_prediction);
+        fourth_prediction = (TextView) findViewById(R.id.fourth_prediction);
+        fifth_prediction = (TextView) findViewById(R.id.fifth_prediction);
+        takenImage = (ImageView) findViewById(R.id.takenImage);
+        btnTranslate = (Button) findViewById(R.id.btnTranslate);
+        LangSpinner = (Spinner) findViewById(R.id.LangSpinner);
 
-            t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-                @Override
-                public void onInit(int status) {
-                    if (status == TextToSpeech.SUCCESS) {
-                        addItemsOnLangSpinner();
-                    } else {
-                        Log.e("TTS", "Initialization failed");
-                    }
+        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    addItemsOnLangSpinner();
+                } else {
+                    Log.e("TTS", "Initialization failed");
                 }
-            });
+            }
+        });
 
-            Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-                String imageUriString = extras.getString("imageUri");
-                Uri imageUri = Uri.parse(imageUriString);
-                try {
-                    photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                    takenImage.setImageBitmap(photo);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String imageUriString = extras.getString("imageUri");
+            Uri imageUri = Uri.parse(imageUriString);
+            try {
+                photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                takenImage.setImageBitmap(photo);
 
-                } catch (IOException e) {
-                    Log.e("ImageBitmap", "Cannot save image as bitmap", e);
-                }
-
-                String ip = IPAddress;
-                PostTaskListener<String> postTaskListener = new PostTaskListener<String>() {
-                    @Override
-                    public void onPostTask(String result) {
-                        if(result.startsWith("Exception")) {
-                            Toast.makeText(CameraResult.this, "Error has occurred", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            result_en = result;
-                            main_prediction.setText(result);
-                        }
-
-                    }
-                };
-                Client myClient = new Client(postTaskListener, ip, 5000, photo, 5000);
-                myClient.execute();
-
-                TakenPicture obj = SaveImage.saveImageToExternalStorage(this.getApplicationContext(), photo);
-                obj.setMainName(main_prediction.getText().toString());
-                String[] suggestion = new String[]{"?","?","?","?"};
-                obj.setSuggestion(suggestion);
-                List<TakenPicture> history = MyPreferences.loadSharedPreferencesLogList(this.getApplicationContext());
-                history.add(obj);
-                MyPreferences.saveSharedPreferencesLogList(this.getApplicationContext(),history);
+            } catch (IOException e) {
+                Log.e("ImageBitmap", "Cannot save image as bitmap", e);
             }
 
-            main_prediction.setOnClickListener(new View.OnClickListener() {
+            String ip = IPAddress;
+            PostTaskListener<String> postTaskListener = new PostTaskListener<String>() {
                 @Override
-                public void onClick(View v) {
+                public void onPostTask(String result) {
+                    if (result.startsWith("Exception")) {
+                        saveEnResult("main prediction", "second prediction",
+                                "third prediction", "fourth prediction", "fifth prediction");
+                        setResultTextView(main_result_en, second_result_en,
+                                third_result_en, fourth_result_en, fifth_result_en);
+                        Toast.makeText(CameraResult.this, "Error has occurred", Toast.LENGTH_SHORT).show();
 
-                    String toSpeak = main_prediction.getText().toString();
-                    t1.setLanguage(DestLocale);
-                    t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+                    } else {
+                        String[] result_arr = result_split(result);
+                        if (result_arr.length == 5) {
+                            saveEnResult(result_arr[0], result_arr[1], result_arr[2], result_arr[3], result_arr[4]);
+                            setResultTextView(main_result_en, second_result_en,
+                                    third_result_en, fourth_result_en, fifth_result_en);
+                        } else {
+                            saveEnResult("main prediction", "second prediction",
+                                    "third prediction", "fourth prediction", "fifth prediction");
+                            setResultTextView(main_result_en, second_result_en,
+                                    third_result_en, fourth_result_en, fifth_result_en);
+                            Toast.makeText(CameraResult.this, "Broken data received", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
                 }
-            });
+            };
 
-            btnTranslate.setOnClickListener(new View.OnClickListener() {
+            Client myClient = new Client(postTaskListener, ip, 5000, photo, 5000);
+            myClient.execute();
+
+            TakenPicture obj = SaveImage.saveImageToExternalStorage(this.getApplicationContext(), photo);
+            obj.setMainName(main_result_en);
+            String[] suggestion = new String[]{second_result_en, third_result_en, fourth_result_en, fifth_result_en};
+            obj.setSuggestion(suggestion);
+            List<TakenPicture> history = MyPreferences.loadSharedPreferencesLogList(this.getApplicationContext());
+            history.add(obj);
+            MyPreferences.saveSharedPreferencesLogList(this.getApplicationContext(), history);
+        }
+
+        main_prediction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String toSpeak = main_prediction.getText().toString();
+                t1.setLanguage(DestLocale);
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+        });
+
+        second_prediction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String toSpeak = second_prediction.getText().toString();
+                t1.setLanguage(DestLocale);
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+        });
+
+        third_prediction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String toSpeak = third_prediction.getText().toString();
+                t1.setLanguage(DestLocale);
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+        });
+
+       fourth_prediction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String toSpeak = fourth_prediction.getText().toString();
+                t1.setLanguage(DestLocale);
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+        });
+
+        fifth_prediction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String toSpeak = fifth_prediction.getText().toString();
+                t1.setLanguage(DestLocale);
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+        });
+
+        btnTranslate.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String toTranslate = result_en;
+                String toTranslate_r1 = main_result_en;
+                String toTranslate_r2 = second_result_en;
+                String toTranslate_r3 = third_result_en;
+                String toTranslate_r4 = fourth_result_en;
+                String toTranslate_r5 = fifth_result_en;
+
                 ChosenLanguage = LangSpinner.getSelectedItem().toString();
                 DestLanguage = Language.valueOf(ChosenLanguage.toUpperCase());
-                TranslatedText = TranslateText(toTranslate, DestLanguage);
-                main_prediction.setText(TranslatedText);
-                Toast.makeText(CameraResult.this,TranslatedText, Toast.LENGTH_SHORT).show();
+
+                TranslatedText_r1 = TranslateText(toTranslate_r1, DestLanguage);
+                main_prediction.setText(TranslatedText_r1);
+                //Toast.makeText(CameraResult.this, TranslatedText, Toast.LENGTH_SHORT).show();
+
+                TranslatedText_r2 = TranslateText(toTranslate_r2, DestLanguage);
+                second_prediction.setText(TranslatedText_r2);
+
+                TranslatedText_r3 = TranslateText(toTranslate_r3, DestLanguage);
+                third_prediction.setText(TranslatedText_r3);
+
+                TranslatedText_r4 = TranslateText(toTranslate_r4, DestLanguage);
+                fourth_prediction.setText(TranslatedText_r4);
+
+                TranslatedText_r5 = TranslateText(toTranslate_r5, DestLanguage);
+                fifth_prediction.setText(TranslatedText_r5);
             }
         });
 
 
-        }
+    }
 
 
-
-    String TranslateText(String toTranslate, Language destLanguage){
+    String TranslateText(String toTranslate, Language destLanguage) {
         try {
             Translate.setKey(YANDEX_API_KEY);
             return Translate.execute(toTranslate, Language.ENGLISH, destLanguage);
@@ -194,7 +268,7 @@ public class CameraResult extends AppCompatActivity {
         for (Locale locale : locales) {
             String language = locale.getDisplayLanguage();
             if (language.trim().length() > 0 && !languages.contains(language) && Language.contains(language))
-                if(!language.equalsIgnoreCase("English"))
+                if (!language.equalsIgnoreCase("English"))
                     languages.add(language);
         }
         Collections.sort(languages);
@@ -204,5 +278,26 @@ public class CameraResult extends AppCompatActivity {
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         LangSpinner.setAdapter(dataAdapter);
+    }
+
+    public String[] result_split(String result) {
+        String[] result_arr = result.split(",");
+        return result_arr;
+    }
+
+    public void setResultTextView(String r1, String r2, String r3, String r4, String r5) {
+        main_prediction.setText(r1);
+        second_prediction.setText(r2);
+        third_prediction.setText(r3);
+        fourth_prediction.setText(r4);
+        fifth_prediction.setText(r5);
+    }
+
+    public void saveEnResult(String r1, String r2, String r3, String r4, String r5) {
+        main_result_en = r1;
+        second_result_en = r2;
+        third_result_en = r3;
+        fourth_result_en = r4;
+        fifth_result_en = r5;
     }
 }

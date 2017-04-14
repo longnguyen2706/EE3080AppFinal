@@ -126,7 +126,7 @@ public class Gallery extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data !=null) {
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -163,5 +163,13 @@ public class Gallery extends AppCompatActivity {
                 Exception error = result.getError();
                 Toast.makeText(this, "Error cropping image", Toast.LENGTH_LONG).show();
             }
+        }
     }
-}}
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Gallery.this, HomePage.class);
+        startActivity(intent);
+        return;
+    }
+}

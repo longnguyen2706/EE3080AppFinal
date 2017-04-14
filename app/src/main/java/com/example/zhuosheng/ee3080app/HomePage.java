@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,8 +57,8 @@ public class HomePage extends AppCompatActivity {
 
         });
 
-
     }
+
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
@@ -65,7 +66,7 @@ public class HomePage extends AppCompatActivity {
 //        getMenuInflater().inflate(R.menu.menu_main, menu);
 //        return true;
 //    }
-
+//
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        // Handle action bar item clicks here. The action bar will
@@ -75,7 +76,7 @@ public class HomePage extends AppCompatActivity {
 //
 //        //noinspection SimplifiableIfStatement
 //        if (id == R.id.action_settings) {
-//            startActivity(new Intent(MainActivity.this,Setting.class));
+//            startActivity(new Intent(HomePage.this,Setting.class));
 //        }
 //
 //        return super.onOptionsItemSelected(item);

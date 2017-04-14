@@ -6,8 +6,9 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_width="90sp"
+        android:layout_height="120sp"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/text"
