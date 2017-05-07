@@ -20,10 +20,12 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".WelcomeActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".HomePage"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+        <activity
+            android:name=".WelcomeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".HomePage"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
@@ -39,10 +41,11 @@
             android:parentActivityName=".HomePage" />
         <activity android:name=".Setting" />
         <activity android:name=".HistoryResult" />
-        <activity android:name=".GalleryResult"></activity>
         <activity android:name=".about" />
         <activity android:name=".feedback" />
         <activity android:name=".ip_add" />
+        <activity android:name=".ViewImage" />
+        <activity android:name=".MyPreferencesActivity"></activity>
     </application>
 
 </manifest>

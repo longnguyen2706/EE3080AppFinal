@@ -50,6 +50,7 @@ public class Camera extends AppCompatActivity {
     int TAKE_PHOTO_CODE = 1;
     String ip;
     Client myClient = null;
+    Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class Camera extends AppCompatActivity {
         btnCapture = (ImageButton) findViewById(R.id.capturePhoto);
         PredictedText = (TextView) findViewById(R.id.PredictionText);
         //Bundle extras = getIntent().getExtras();
-        ip = "192.168.1.1";//extras.getString("IPAddress");
+        ip = "155.69.54.35";//extras.getString("IPAddress");
         Flashlay = (FrameLayout) findViewById(R.id.Framelay);
 
         captureModeRadioGroup.setOnCheckedChangeListener(captureModeChangedListener);
@@ -166,7 +167,7 @@ public class Camera extends AppCompatActivity {
                 // Create a bitmap
                 Bitmap result = BitmapFactory.decodeByteArray(picture, 0, picture.length);
                 if (LIVE_MODE == 1 && CAMERA_MODE == 0) {
-                    myClient = new Client(postTaskListener, ip, 5000, result, 5000);
+                    myClient = new Client(postTaskListener, ip, 5000, result, 5000, context);
                     myClient.execute();
                 }
                 if (CAMERA_MODE == 1 && LIVE_MODE == 0) {
@@ -205,7 +206,7 @@ public class Camera extends AppCompatActivity {
         super.onResume();
         camera.start();
         btnCapture.setEnabled(true);
-    }
+}
 
     @Override
     protected void onPause() {
@@ -219,6 +220,7 @@ public class Camera extends AppCompatActivity {
         }
         super.onPause();
     }
+
 
     RadioGroup.OnCheckedChangeListener captureModeChangedListener = new RadioGroup.OnCheckedChangeListener() {
         @Override

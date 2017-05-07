@@ -2,12 +2,13 @@ package com.example.zhuosheng.ee3080app;
 public class TakenPicture {
     //Attributes
     private String linkToPicture;
-    private String mainName;
-    private String[] suggestion;
+    private String mainName = "?";
+    private String[] suggestion =new String[] {"?","?","?","?"};
 
     //Methods
 
     //Constructor
+    public TakenPicture(){ };
     public TakenPicture(String link)
     {
         setLinkToPicture(link);

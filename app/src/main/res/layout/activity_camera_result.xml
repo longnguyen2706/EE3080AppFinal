@@ -14,8 +14,7 @@
         <ImageView
             android:id="@+id/takenImage"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="360sp"
             android:scaleType="centerCrop" />
         <!--android:src="@drawable/dog" />-->
 
@@ -53,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="main prediction"
+                android:text=""
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="25sp"
                 android:textStyle="normal" />
@@ -86,7 +85,7 @@
                         android:layout_marginLeft="20sp"
                         android:layout_weight="1"
                         android:paddingTop="10sp"
-                        android:text="second prediction"
+                        android:text=""
                         android:textColor="@android:color/holo_blue_dark"
                         android:textSize="15dp"
                         android:textStyle="normal" />
@@ -103,7 +102,7 @@
                         android:layout_weight="1"
                         android:gravity="right"
                         android:paddingTop="10sp"
-                        android:text="third prediction"
+                        android:text=""
                         android:textColor="@android:color/holo_blue_dark"
                         android:textSize="15sp"
                         android:textStyle="normal" />
@@ -120,7 +119,7 @@
                         android:layout_marginLeft="20sp"
                         android:layout_weight="1"
                         android:paddingTop="5sp"
-                        android:text="fourth prediction"
+                        android:text=""
                         android:textColor="@android:color/holo_blue_dark"
                         android:textSize="15sp"
                         android:textStyle="normal" />
@@ -135,7 +134,7 @@
                         android:layout_weight="1"
                         android:gravity="right"
                         android:paddingTop="5sp"
-                        android:text="fifth prediction"
+                        android:text=""
                         android:textColor="@android:color/holo_blue_dark"
                         android:textSize="15sp"
                         android:textStyle="normal" />

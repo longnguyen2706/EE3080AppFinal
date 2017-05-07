@@ -1,5 +1,6 @@
 package com.example.zhuosheng.ee3080app;
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.support.v7.app.AppCompatActivity;
@@ -45,17 +46,20 @@ public class CameraResult extends AppCompatActivity {
     TextView main_prediction, second_prediction, third_prediction, fourth_prediction, fifth_prediction;
     ImageView takenImage;
     Spinner LangSpinner;
+    Context c = this;
     Button btnTranslate;
     Bitmap photo;
+    TakenPicture obj;
     int TAKE_PHOTO_CODE = 0;
     int CAMERA_ACTIVITY_CODE = 100;
-    String IPAddress;
+    String IPAddress = "192.168.0.102";//"155.69.54.35";
     TextToSpeech t1;
     String TranslatedText_r1, TranslatedText_r2, TranslatedText_r3, TranslatedText_r4, TranslatedText_r5;
     Language DestLanguage = Language.ENGLISH;
     Locale DestLocale = Locale.UK;
     String ChosenLanguage = "English";
     String main_result_en, second_result_en, third_result_en, fourth_result_en, fifth_result_en;
+    String TAG = "CameraResult";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,10 +117,13 @@ public class CameraResult extends AppCompatActivity {
         });
 
         Bundle extras = getIntent().getExtras();
+
         if (extras != null) {
+
             String imageUriString = extras.getString("imageUri");
             Uri imageUri = Uri.parse(imageUriString);
-            photo = getResizedBitmap(imageUri,4096,4096);
+            photo = getResizedBitmap(imageUri, 4096, 4096);
+            obj = SaveImage.saveImageToExternalStorage(this.getApplicationContext(), photo);
             takenImage.setImageBitmap(photo);
 //            try {
 //
@@ -132,8 +139,8 @@ public class CameraResult extends AppCompatActivity {
                 @Override
                 public void onPostTask(String result) {
                     if (result.startsWith("Exception")) {
-                        saveEnResult("main prediction", "second prediction",
-                                "third prediction", "fourth prediction", "fifth prediction");
+                        saveEnResult("Undefined", "Undefined",
+                                "Undefined", "Undefined", "Undefined");
                         setResultTextView(main_result_en, second_result_en,
                                 third_result_en, fourth_result_en, fifth_result_en);
                         Toast.makeText(CameraResult.this, "Error has occurred", Toast.LENGTH_SHORT).show();
@@ -141,14 +148,23 @@ public class CameraResult extends AppCompatActivity {
                     } else {
                         String[] result_arr = result_split(result);
                         if (result_arr.length == 5) {
+
                             saveEnResult(result_arr[0], result_arr[1], result_arr[2], result_arr[3], result_arr[4]);
                             setResultTextView(main_result_en, second_result_en,
                                     third_result_en, fourth_result_en, fifth_result_en);
+                            obj.setMainName(main_result_en);
+                            String[] suggestion = new String[]{ second_result_en, third_result_en, fourth_result_en, fifth_result_en};
+                            obj.setSuggestion(suggestion);
+                            List<TakenPicture> history = MyPreferences.loadSharedPreferencesLogList(c);
+                            history.add(obj);
+                            MyPreferences.saveSharedPreferencesLogList(c, history);
+                            Toast.makeText(CameraResult.this, "Successful!", Toast.LENGTH_SHORT).show();
                         } else {
                             saveEnResult("main prediction", "second prediction",
                                     "third prediction", "fourth prediction", "fifth prediction");
                             setResultTextView(main_result_en, second_result_en,
                                     third_result_en, fourth_result_en, fifth_result_en);
+                            Log.i(TAG, "default result");
                             Toast.makeText(CameraResult.this, "Broken data received", Toast.LENGTH_SHORT).show();
                         }
 
@@ -157,16 +173,8 @@ public class CameraResult extends AppCompatActivity {
                 }
             };
 
-            Client myClient = new Client(postTaskListener, ip, 5000, photo, 5000);
+            Client myClient = new Client(postTaskListener, ip, 5000, photo, 2000, c);
             myClient.execute();
-
-            TakenPicture obj = SaveImage.saveImageToExternalStorage(this.getApplicationContext(), photo);
-            obj.setMainName(main_result_en);
-            String[] suggestion = new String[]{second_result_en, third_result_en, fourth_result_en, fifth_result_en};
-            obj.setSuggestion(suggestion);
-            List<TakenPicture> history = MyPreferences.loadSharedPreferencesLogList(this.getApplicationContext());
-            history.add(obj);
-            MyPreferences.saveSharedPreferencesLogList(this.getApplicationContext(), history);
         }
 
         main_prediction.setOnClickListener(new View.OnClickListener() {
@@ -199,7 +207,7 @@ public class CameraResult extends AppCompatActivity {
             }
         });
 
-       fourth_prediction.setOnClickListener(new View.OnClickListener() {
+        fourth_prediction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -231,39 +239,50 @@ public class CameraResult extends AppCompatActivity {
 
                 ChosenLanguage = LangSpinner.getSelectedItem().toString();
                 DestLanguage = Language.valueOf(ChosenLanguage.toUpperCase());
+                PostTaskListener<String> postTaskListenerforTranslate = new PostTaskListener<String>() {
+                    @Override
+                    public void onPostTask (String result){
+                        String[] translation_arr = result_split(result);
+                        setResultTextView(translation_arr[0], translation_arr[1], translation_arr[2], translation_arr[3], translation_arr[4]);
+                    }
 
-                TranslatedText_r1 = TranslateText(toTranslate_r1, DestLanguage);
-                main_prediction.setText(TranslatedText_r1);
-                //Toast.makeText(CameraResult.this, TranslatedText, Toast.LENGTH_SHORT).show();
+                };
+                Translation translation = new Translation(postTaskListenerforTranslate, toTranslate_r1, toTranslate_r2, toTranslate_r3,
+                                                    toTranslate_r4, toTranslate_r5, DestLanguage, c);
+                translation.execute();
 
-                TranslatedText_r2 = TranslateText(toTranslate_r2, DestLanguage);
-                second_prediction.setText(TranslatedText_r2);
-
-                TranslatedText_r3 = TranslateText(toTranslate_r3, DestLanguage);
-                third_prediction.setText(TranslatedText_r3);
-
-                TranslatedText_r4 = TranslateText(toTranslate_r4, DestLanguage);
-                fourth_prediction.setText(TranslatedText_r4);
-
-                TranslatedText_r5 = TranslateText(toTranslate_r5, DestLanguage);
-                fifth_prediction.setText(TranslatedText_r5);
+//                TranslatedText_r1 = TranslateText(toTranslate_r1, DestLanguage);
+//                main_prediction.setText(TranslatedText_r1);
+//                //Toast.makeText(CameraResult.this, TranslatedText, Toast.LENGTH_SHORT).show();
+//
+//                TranslatedText_r2 = TranslateText(toTranslate_r2, DestLanguage);
+//                second_prediction.setText(TranslatedText_r2);
+//
+//                TranslatedText_r3 = TranslateText(toTranslate_r3, DestLanguage);
+//                third_prediction.setText(TranslatedText_r3);
+//
+//                TranslatedText_r4 = TranslateText(toTranslate_r4, DestLanguage);
+//                fourth_prediction.setText(TranslatedText_r4);
+//
+//                TranslatedText_r5 = TranslateText(toTranslate_r5, DestLanguage);
+//                fifth_prediction.setText(TranslatedText_r5);
             }
         });
 
 
     }
 
-
-    String TranslateText(String toTranslate, Language destLanguage) {
-        try {
-            Translate.setKey(YANDEX_API_KEY);
-            return Translate.execute(toTranslate, Language.ENGLISH, destLanguage);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
+//
+//    String TranslateText(String toTranslate, Language destLanguage) {
+//        try {
+//            Translate.setKey(YANDEX_API_KEY);
+//            return Translate.execute(toTranslate, Language.ENGLISH, destLanguage);
+//        } catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     public void addItemsOnLangSpinner() {
 
@@ -305,22 +324,18 @@ public class CameraResult extends AppCompatActivity {
         third_result_en = r3;
         fourth_result_en = r4;
         fifth_result_en = r5;
+
     }
 
-//    public int[] getSizeImageFromUri(Uri uri) {
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inJustDecodeBounds = true;
-//        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
-//        int imageHeight = options.outHeight;
-//        int imageWidth = options.outWidth;
-//        int[] imageSize = {imageWidth, imageHeight};
-//        return imageSize;
-//    }
+
+
+
+    //    }
     public Bitmap getResizedBitmap(Uri uri, int newWidth, int newHeight) {
         Bitmap bm = BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath());
         int width = bm.getWidth();
         int height = bm.getHeight();
-        if (width<=4096 && height<=4096)
+        if (width <= 4096 && height <= 4096)
             return bm;
         else {
             float scaleWidth = ((float) newWidth) / width;

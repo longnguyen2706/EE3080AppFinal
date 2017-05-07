@@ -93,7 +93,7 @@ public class History extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(History.this, ViewImage.class);
+                Intent i = new Intent(History.this, HistoryResult.class);
                 // Pass String arrays FilePathStrings
                 i.putExtra("filepath", FilePathStrings);
                 // Pass String arrays FileNameStrings

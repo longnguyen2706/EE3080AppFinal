@@ -20,6 +20,7 @@ public class HomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
@@ -76,7 +77,7 @@ public class HomePage extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(HomePage.this,Setting.class));
+            startActivity(new Intent(HomePage.this,MyPreferencesActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

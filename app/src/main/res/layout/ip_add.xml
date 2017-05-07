@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="I.P Address"
-        android:textSize="36sp" />
+        android:textSize="24sp" />
 
     <EditText
         android:id="@+id/ETIP"

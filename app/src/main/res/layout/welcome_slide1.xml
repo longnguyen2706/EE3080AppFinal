@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="@color/bg_screen1">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_screen1">
 
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <ImageView
+        <ImageView
             android:id="@+id/imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:src="@drawable/ic_camera" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Take a picture!"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/slide_title"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take a picture!"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/slide_title"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:paddingLeft="@dimen/desc_padding"
-        android:paddingRight="@dimen/desc_padding"
-        android:text="Want to know which object is this? \n Let the app help you! Just take a picture!"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/slide_desc" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
+            android:text="Want to know which object is this? \n Let the app help you! Just take a picture!"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/slide_desc" />
 
-</LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
