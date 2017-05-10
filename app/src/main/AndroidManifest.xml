@@ -34,18 +34,11 @@
             android:parentActivityName=".HomePage" />
         <activity android:name=".CameraResult" />
         <activity
-            android:name=".Gallery"
-            android:parentActivityName=".HomePage" />
-        <activity
             android:name=".History"
             android:parentActivityName=".HomePage" />
-        <activity android:name=".Setting" />
         <activity android:name=".HistoryResult" />
-        <activity android:name=".about" />
-        <activity android:name=".feedback" />
-        <activity android:name=".ip_add" />
-        <activity android:name=".ViewImage" />
-        <activity android:name=".MyPreferencesActivity"></activity>
+        <activity android:name=".MyPreferencesActivity" />
+        <activity android:name=".GalleryResult"></activity>
     </application>
 
 </manifest>

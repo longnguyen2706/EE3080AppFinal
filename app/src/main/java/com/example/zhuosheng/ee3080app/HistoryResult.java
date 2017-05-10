@@ -163,6 +163,7 @@ public class HistoryResult extends Activity {
 
                 ChosenLanguage = LangSpinner.getSelectedItem().toString();
                 DestLanguage = Language.valueOf(ChosenLanguage.toUpperCase());
+                DestLocale = new Locale(DestLanguage.toString());
                 PostTaskListener<String> postTaskListenerforTranslate = new PostTaskListener<String>() {
                     @Override
                     public void onPostTask(String result) {

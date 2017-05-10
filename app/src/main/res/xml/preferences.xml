@@ -4,17 +4,23 @@
         android:key="IP_address"
         android:summary="Please type in server IP address (ex: 192.168.1.1)"
         android:title="IP address"></EditTextPreference>
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/listArray"
+        android:entryValues="@array/listValues"
+        android:key="imageSize"
+        android:summary="Select the kind size of image you want to save"
+        android:title="Set image size" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="startTutorial"
         android:summary="Enable the short user guide when entering the app"
         android:title="Show tutorial on start up" />
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/listArray"
-        android:entryValues="@array/listValues"
-        android:key="downloadType"
-        android:summary="Select the kind of data that you would like to download"
-        android:title="Download Details" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="sendReport"
+        android:summary="Automatically send crash reports to our server"
+        android:title="Send crash report" />
+
 
 </PreferenceScreen>

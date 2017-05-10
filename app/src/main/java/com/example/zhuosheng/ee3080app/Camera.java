@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -49,8 +51,9 @@ public class Camera extends AppCompatActivity {
     int CAMERA_RESULT_ACTIVITY = 10;
     int TAKE_PHOTO_CODE = 1;
     String ip;
-    Client myClient = null;
-    Context context = this;
+    private SharedPreferences sharedPreferences;
+    ClientLiveMode myClient = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +89,9 @@ public class Camera extends AppCompatActivity {
         btnCapture = (ImageButton) findViewById(R.id.capturePhoto);
         PredictedText = (TextView) findViewById(R.id.PredictionText);
         //Bundle extras = getIntent().getExtras();
-        ip = "155.69.54.35";//extras.getString("IPAddress");
+        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        ip = sharedPreferences.getString("IP_address", null);
+        //ip = "155.69.53.25";//extras.getString("IPAddress");
         Flashlay = (FrameLayout) findViewById(R.id.Framelay);
 
         captureModeRadioGroup.setOnCheckedChangeListener(captureModeChangedListener);
@@ -154,7 +159,8 @@ public class Camera extends AppCompatActivity {
             @Override
             public void onPostTask(String result) {
                 //Toast.makeText(Camera.this, result, Toast.LENGTH_SHORT).show();
-                PredictedText.setText(result);
+                String[] result_arr = result_split(result);
+                PredictedText.setText(result_arr[0]);
                 camera.captureImage();
             }
         };
@@ -167,7 +173,7 @@ public class Camera extends AppCompatActivity {
                 // Create a bitmap
                 Bitmap result = BitmapFactory.decodeByteArray(picture, 0, picture.length);
                 if (LIVE_MODE == 1 && CAMERA_MODE == 0) {
-                    myClient = new Client(postTaskListener, ip, 5000, result, 5000, context);
+                    myClient = new ClientLiveMode(postTaskListener, ip, 5000, result, 5000);
                     myClient.execute();
                 }
                 if (CAMERA_MODE == 1 && LIVE_MODE == 0) {
@@ -206,7 +212,14 @@ public class Camera extends AppCompatActivity {
         super.onResume();
         camera.start();
         btnCapture.setEnabled(true);
-}
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(Camera.this, HomePage.class);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     protected void onPause() {
@@ -292,4 +305,10 @@ public class Camera extends AppCompatActivity {
 
 
         }
+    public String[] result_split(String result) {
+        String[] result_arr = result.split(",");
+        return result_arr;
     }
+}
+
+

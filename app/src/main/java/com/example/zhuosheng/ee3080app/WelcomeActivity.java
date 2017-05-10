@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -39,7 +40,9 @@ public class WelcomeActivity extends AppCompatActivity {
         prefManager = new PrefManager(this);
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean turnOnTutorial = sharedPreferences.getBoolean("startTutorial", false);
-      if (!prefManager.isFirstTimeLaunch()|| turnOnTutorial) {
+        System.out.println(turnOnTutorial);
+
+      if (!prefManager.isFirstTimeLaunch()&& !turnOnTutorial) {
             launchHomeScreen();
             finish();
         }

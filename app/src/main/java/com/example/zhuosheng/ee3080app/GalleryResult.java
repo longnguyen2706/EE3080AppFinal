@@ -44,19 +44,19 @@ import java.util.Set;
 
 import static com.rmtheis.yandtran.ApiKeys.YANDEX_API_KEY;
 
-public class CameraResult extends AppCompatActivity {
+public class GalleryResult extends AppCompatActivity {
     TextView main_prediction, second_prediction, third_prediction, fourth_prediction, fifth_prediction;
     ImageView takenImage;
     Spinner LangSpinner;
     Context c = this;
     Button btnTranslate;
     Bitmap photo;
-    Bitmap resizedPhoto;
     TakenPicture obj;
+    String imageSize;
+    Bitmap resizedPhoto;
     int TAKE_PHOTO_CODE = 0;
     int CAMERA_ACTIVITY_CODE = 100;
     String IPAddress;
-    String imageSize;
     private SharedPreferences sharedPreferences;
     //String IPAddress = "155.69.53.25";//"192.168.0.102";//"155.69.54.35";
     TextToSpeech t1;
@@ -77,11 +77,11 @@ public class CameraResult extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 0;
 
-        if (ContextCompat.checkSelfPermission(CameraResult.this,
+        if (ContextCompat.checkSelfPermission(GalleryResult.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(CameraResult.this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(GalleryResult.this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -91,7 +91,7 @@ public class CameraResult extends AppCompatActivity {
 
                 // No explanation needed, we can request the permission.
 
-                ActivityCompat.requestPermissions(CameraResult.this,
+                ActivityCompat.requestPermissions(GalleryResult.this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
 
@@ -124,8 +124,6 @@ public class CameraResult extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         IPAddress = sharedPreferences.getString("IP_address", null);
         System.out.println(IPAddress);
-
-
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -133,6 +131,7 @@ public class CameraResult extends AppCompatActivity {
             String imageUriString = extras.getString("imageUri");
             Uri imageUri = Uri.parse(imageUriString);
             photo = getResizedBitmap(imageUri, 1024);
+
             imageSize = sharedPreferences.getString("imageSize", "1");
             switch (imageSize){
                 case "1":
@@ -145,6 +144,7 @@ public class CameraResult extends AppCompatActivity {
                     resizedPhoto = getResizedBitmap(imageUri, 2048);
                     break;
             }
+
             obj = SaveImage.saveImageToExternalStorage(this.getApplicationContext(), resizedPhoto);
             takenImage.setImageBitmap(photo);
 //            try {
@@ -165,7 +165,7 @@ public class CameraResult extends AppCompatActivity {
                                 "Undefined", "Undefined", "Undefined");
                         setResultTextView(main_result_en, second_result_en,
                                 third_result_en, fourth_result_en, fifth_result_en);
-                        Toast.makeText(CameraResult.this, "Error has occurred", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GalleryResult.this, "Error has occurred", Toast.LENGTH_SHORT).show();
 
                     } else {
                         String[] result_arr = result_split(result);
@@ -180,14 +180,14 @@ public class CameraResult extends AppCompatActivity {
                             List<TakenPicture> history = MyPreferences.loadSharedPreferencesLogList(c);
                             history.add(obj);
                             MyPreferences.saveSharedPreferencesLogList(c, history);
-                            Toast.makeText(CameraResult.this, "Successful!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GalleryResult.this, "Successful!", Toast.LENGTH_SHORT).show();
                         } else {
                             saveEnResult("main prediction", "second prediction",
                                     "third prediction", "fourth prediction", "fifth prediction");
                             setResultTextView(main_result_en, second_result_en,
                                     third_result_en, fourth_result_en, fifth_result_en);
                             Log.i(TAG, "default result");
-                            Toast.makeText(CameraResult.this, "Broken data received", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GalleryResult.this, "Broken data received", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -374,7 +374,7 @@ public class CameraResult extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(CameraResult.this, Camera.class);
+        Intent intent = new Intent(GalleryResult.this, HomePage.class);
         startActivity(intent);
         finish();
 

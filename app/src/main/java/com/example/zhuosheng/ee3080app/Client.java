@@ -74,7 +74,7 @@ public class Client extends AsyncTask<Void, Void, String> {
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] bytes = baos.toByteArray();
             int size = bytes.length;
-            out.write(start_code);
+
             out.writeInt(size);
             out.write(bytes);
 
